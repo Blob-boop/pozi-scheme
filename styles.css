@@ -51,7 +51,7 @@ html, body {
   width: 95%;
   height: auto;
   /* make it faint + blend the black background if any */
-  opacity: 0.15;              /* tweak 0.10–0.35 to taste */
+  opacity: 0.35;              /* tweak 0.10–0.35 to taste */
   mix-blend-mode: screen;     /* helps if the GIF has dark bg */
   filter: brightness(1.1) contrast(1.05);
   z-index: 2;                 /* above die.gif */
@@ -66,7 +66,7 @@ html, body {
   transform: translateX(-50%);
   width: 26vmin;
   height: 26vmin;
-  background-image: url('sweep.gif'); /* your streak GIF */
+  background-image: url('explosion.gif'); /* your streak GIF */
   background-size: cover;
   background-repeat: no-repeat;
   opacity: .95;
