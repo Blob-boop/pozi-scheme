@@ -35,9 +35,8 @@
     <!-- Center stack -->
     <div class="center">
       <img id="die" src="die.gif" alt="die" />
-      <!-- MP4 explosion overlaid above die.gif.
-           If your video has black background, mix-blend:screen makes it “glow”. -->
-      <video id="boom" src="explosion.mp4" preload="auto" playsinline loop></video>
+      <!-- CHANGED: video → img so a GIF will loop automatically -->
+      <img id="boom" src="explosion_overlay.gif" alt="explosion overlay" />
     </div>
 
     <!-- Two fast vertical sweeps using an explosion GIF -->
