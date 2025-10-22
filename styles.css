@@ -44,39 +44,40 @@ html, body {
   z-index: 1;
 }
 
+/* The center explosion overlay */
 #boom {
   position: absolute;
   inset: 50% auto auto 50%;
   transform: translate(-50%, -50%);
   width: 95%;
   height: auto;
-  /* make it faint + blend the black background if any */
-  opacity: 0.35;              /* tweak 0.10–0.35 to taste */
-  mix-blend-mode: screen;     /* helps if the GIF has dark bg */
+  opacity: 0.2;              /* faint overlay */
+  mix-blend-mode: screen;    /* helps blend black background */
   filter: brightness(1.1) contrast(1.05);
-  z-index: 2;                 /* above die.gif */
+  z-index: 2;
   pointer-events: none;
+  transition: opacity 3s ease; /* slow fade-in */
 }
 
-/* Vertical explosion sweeps (two lanes) */
+/* The two fast vertical “sweeps” */
 .sweep {
   position: absolute;
-  top: -40vh;
+  top: -40vh;                /* start above screen */
   left: var(--x, 50%);
   transform: translateX(-50%);
   width: 26vmin;
   height: 26vmin;
-  background-image: url('explosion.gif'); /* your streak GIF */
+  background-image: url('Explosion.gif'); /* SAME file */
   background-size: cover;
   background-repeat: no-repeat;
-  opacity: .95;
+  opacity: .9;
   animation: fall .7s linear infinite;
   z-index: 0;
   pointer-events: none;
   filter: drop-shadow(0 0 1.2vmin rgba(255,180,80,.7));
 }
 
-/* lane timing offsets so they don't sync */
+/* offset timing */
 .sweep.s1 { animation-delay: 0s; }
 .sweep.s2 { animation-delay: .15s; }
 
