@@ -50,34 +50,29 @@ html, body {
   transform: translate(-50%, -50%);
   width: 95%;
   height: auto;
-
-  /* keep this if the video has a black background you want to “key out” */
-  mix-blend-mode: screen;
-
-  /* LOWER the opacity a lot */
-  opacity: 0.15;         /* ← try 0.10–0.25 to taste */
-
+  /* make it faint + blend the black background if any */
+  opacity: 0.15;              /* tweak 0.10–0.35 to taste */
+  mix-blend-mode: screen;     /* helps if the GIF has dark bg */
   filter: brightness(1.1) contrast(1.05);
-  z-index: 2;
+  z-index: 2;                 /* above die.gif */
   pointer-events: none;
 }
 
 /* Vertical explosion sweeps (two lanes) */
 .sweep {
   position: absolute;
-  top: -40vh;             /* start above the viewport */
+  top: -40vh;
   left: var(--x, 50%);
   transform: translateX(-50%);
-  width: 26vmin;          /* size of the sweep sprite/gif */
+  width: 26vmin;
   height: 26vmin;
-  background-image: url('explosion.gif'); /* replace with your sweeping explosion gif */
+  background-image: url('sweep.gif'); /* your streak GIF */
   background-size: cover;
   background-repeat: no-repeat;
   opacity: .95;
   animation: fall .7s linear infinite;
   z-index: 0;
   pointer-events: none;
-  will-change: transform, top;
   filter: drop-shadow(0 0 1.2vmin rgba(255,180,80,.7));
 }
 
