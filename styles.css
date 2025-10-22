@@ -1,6 +1,4 @@
-:root {
-  --bg: #000;
-}
+:root { --bg:#000; }
 
 * { box-sizing: border-box; }
 
@@ -16,27 +14,27 @@ html, body {
 /* Header at top that slides in over 5s */
 #header {
   position: fixed;
-  top: 0;               /* anchor to top */
+  top: 0;
   left: 50%;
-  transform: translate(-50%, -120%); /* start offscreen above */
+  transform: translate(-50%, -120%);  /* start above viewport */
   color: #fff;
-  font-size: clamp(2.5rem, 8vw, 5rem); /* big & responsive */
+  font-size: clamp(2.5rem, 8vw, 5rem);
   font-weight: 1000;
   letter-spacing: 2px;
   text-align: center;
   text-shadow: 0 0 20px #ff6a00, 0 0 40px #ff2a00;
   z-index: 50;
-  opacity: 0;           /* hidden initially */
+  opacity: 0;
 }
 #header.show {
-  animation: slideInFromTop 5s ease forwards; /* slide + fade in */
+  animation: slideInFromTop 5s ease forwards;
 }
 @keyframes slideInFromTop {
   0%   { transform: translate(-50%, -120%); opacity: 0; }
-  100% { transform: translate(-50%, 10%);  opacity: 1; } /* settle slightly down from top */
+  100% { transform: translate(-50%, 10%);  opacity: 1; }
 }
 
-/* Stage with effects */
+/* Stage */
 #stage {
   position: fixed;
   inset: 0;
@@ -54,39 +52,56 @@ html, body {
   width: min(60vmin, 85vw);
   aspect-ratio: 1 / 1;
 }
-
 #die {
   position: absolute;
   inset: 50% auto auto 50%;
   transform: translate(-50%, -50%);
   width: 70%;
   height: auto;
-  z-index: 10; /* keep above sweeps */
+  z-index: 10; /* above columns */
 }
 
-/* Two fast vertical sweeps using the SAME Explosion.gif */
-.sweep {
-  position: absolute;
-  top: -40vh;                 /* start above viewport */
-  left: var(--x, 50%);
-  transform: translateX(-50%);
-  width: 28vmin;
-  height: 28vmin;
-  background-image: url('Explosion.gif'); /* EXACT filename/casing */
-  background-size: cover;
-  background-repeat: no-repeat;
-  opacity: 1;
-  animation: fall .6s linear infinite;
-  z-index: 5;                 /* ensure visible above bg, below die */
+/* Vertical marquee columns (modern <marquee>) */
+.vmarq {
+  --size: 26vmin;     /* width of the column */
+  --speed: 0.9s;      /* smaller = faster */
+  position: fixed;
+  top: 0;
+  bottom: 0;
+  width: var(--size);
+  overflow: hidden;
   pointer-events: none;
-  will-change: transform, top;
-  filter: drop-shadow(0 0 1.2vmin rgba(255,180,80,.8));
+  z-index: 8;         /* visible, but below die and header */
+}
+.vmarq.left  { left: 2%; }
+.vmarq.right { right: 2%; }
+
+.vmarq .track {
+  position: absolute;
+  top: -110%;
+  left: 50%;
+  transform: translateX(-50%);
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 8vh;
+  animation: scrollDown var(--speed) linear infinite;
 }
 
-.sweep.s1 { animation-delay: 0s; }
-.sweep.s2 { animation-delay: .12s; }
+/* Make a column go UP instead of down */
+.vmarq.reverse .track { animation-name: scrollUp; }
 
-@keyframes fall {
-  0%   { top: -40vh; transform: translateX(-50%) scale(1.05); }
-  100% { top: 120vh; transform: translateX(-50%) scale(0.90); }
+.vmarq img {
+  width: 100%;
+  height: auto;
+  filter: drop-shadow(0 0 1.2vmin rgba(255,180,80,.85));
+}
+
+@keyframes scrollDown {
+  0%   { transform: translate(-50%, -110%); }
+  100% { transform: translate(-50%,  110%); }
+}
+@keyframes scrollUp {
+  0%   { transform: translate(-50%,  110%); }
+  100% { transform: translate(-50%, -110%); }
 }
