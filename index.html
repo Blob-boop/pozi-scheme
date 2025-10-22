@@ -3,7 +3,7 @@
 <head>
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width,initial-scale=1" />
-  <title>Sound Reveal</title>
+  <title>Play Sound</title>
   <style>
     html, body {
       height: 100%;
@@ -13,18 +13,21 @@
       align-items: center;
       justify-content: center;
       overflow: hidden;
+      font-family: system-ui, sans-serif;
     }
 
     #play-btn {
-      font: 700 1.25rem/1.4 system-ui, sans-serif;
+      font-size: 1.25rem;
+      font-weight: 700;
       background: #fff;
       color: #000;
       border: none;
       border-radius: 12px;
-      padding: 16px 32px;
+      padding: 16px 36px;
       cursor: pointer;
       box-shadow: 0 8px 20px rgba(0,0,0,.4);
-      transition: transform 0.2s ease;
+      transition: all 0.3s ease;
+      z-index: 10;
     }
 
     #play-btn:hover {
@@ -39,13 +42,13 @@
       object-fit: cover;
       opacity: 0;
       transition: opacity 1.5s ease;
-      z-index: -1;
+      z-index: 0;
     }
   </style>
 </head>
 <body>
   <button id="play-btn">Play sound</button>
-  <img id="bg" src="bg.jpg" alt="Background">
+  <img id="bg" src="bg.jpg" alt="Background image">
   <audio id="bgm" src="track.mp3" loop preload="auto" playsinline></audio>
 
   <script>
@@ -56,10 +59,11 @@
     playBtn.addEventListener('click', async () => {
       try {
         await bgm.play();
-        bg.style.opacity = 1;
-        playBtn.remove();
-      } catch (e) {
-        console.error('Audio play blocked:', e);
+        bg.style.opacity = 1;                // fade the image in
+        playBtn.style.opacity = 0;           // fade the button out
+        setTimeout(() => playBtn.remove(), 800);  // remove it after fade
+      } catch (err) {
+        console.error('Audio play blocked:', err);
       }
     });
   </script>
