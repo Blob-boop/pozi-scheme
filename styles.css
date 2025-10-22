@@ -1,12 +1,91 @@
-:root { --bg:#0f1115; --text:#e6e6e6; --muted:#a6a6a6; --card:#171a21; --accent:#5cc8ff; }
-* { box-sizing:border-box; }
-html,body { margin:0; background:var(--bg); color:var(--text); font:16px/1.5 system-ui,Segoe UI,Roboto,Helvetica,Arial,sans-serif; }
-a { color:var(--accent); text-decoration:none; }
-.container { max-width:900px; margin:auto; padding:20px; }
-header { display:flex; gap:16px; align-items:center; justify-content:space-between; border-bottom:1px solid #222; }
-header h1 { margin:0; font-size:1.25rem; }
-nav a { margin-left:14px; }
-h2 { margin-top:32px; }
-.card-list { list-style:none; padding:0; display:grid; grid-template-columns:repeat(auto-fit,minmax(250px,1fr)); gap:14px; }
-.card { background:var(--card); padding:16px; border-radius:12px; border:1px solid #222; }
-footer { border-top:1px solid #222; margin-top:40px; }
+:root {
+  --bg:#000;
+}
+
+* { box-sizing: border-box; }
+
+html, body {
+  margin: 0;
+  background: var(--bg);
+  color: #e6e6e6;
+  font: 16px/1.5 system-ui, Segoe UI, Roboto, Helvetica, Arial, sans-serif;
+  height: 100%;
+  overflow: hidden;
+}
+
+/* THE STAGE */
+#stage {
+  position: fixed;
+  inset: 0;
+  display: grid;
+  place-items: center;
+  pointer-events: none; /* visuals only; button handles the click */
+  opacity: 0;
+  transition: opacity .6s ease;
+}
+
+#stage.active { opacity: 1; }
+
+/* Center stack: die.gif under, explosion video over */
+.center {
+  position: relative;
+  width: min(60vmin, 80vw);
+  height: auto;
+  aspect-ratio: 1/1; /* keeps a square-ish stage; tweak as you like */
+}
+
+#die {
+  position: absolute;
+  inset: 50% auto auto 50%;
+  transform: translate(-50%, -50%);
+  width: 70%;
+  height: auto;
+  image-rendering: auto;
+  z-index: 1;
+}
+
+#boom {
+  position: absolute;
+  inset: 50% auto auto 50%;
+  transform: translate(-50%, -50%);
+  width: 95%;
+  height: auto;
+  /* If your MP4 has a dark/black background, this helps “key it out” */
+  mix-blend-mode: screen;
+  filter: brightness(1.35) contrast(1.1);
+  z-index: 2;
+  pointer-events: none;
+}
+
+/* Vertical explosion sweeps (two lanes) */
+.sweep {
+  position: absolute;
+  top: -40vh;             /* start above the viewport */
+  left: var(--x, 50%);
+  transform: translateX(-50%);
+  width: 26vmin;          /* size of the sweep sprite/gif */
+  height: 26vmin;
+  background-image: url('explosion.gif'); /* replace with your sweeping explosion gif */
+  background-size: cover;
+  background-repeat: no-repeat;
+  opacity: .95;
+  animation: fall .7s linear infinite;
+  z-index: 0;
+  pointer-events: none;
+  will-change: transform, top;
+  filter: drop-shadow(0 0 1.2vmin rgba(255,180,80,.7));
+}
+
+/* lane timing offsets so they don't sync */
+.sweep.s1 { animation-delay: 0s; }
+.sweep.s2 { animation-delay: .15s; }
+
+@keyframes fall {
+  0%   { top: -40vh; transform: translateX(-50%) scale(1.05); }
+  100% { top: 120vh; transform: translateX(-50%) scale(0.9); }
+}
+
+/* Optional: hide the boom after it ends (used if you add .hide via JS) */
+#boom.hide { opacity: 0; transition: opacity .3s ease; }
+
+/* (You can keep any of your previous site styles below if needed) */
