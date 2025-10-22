@@ -3,86 +3,59 @@
 <head>
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width,initial-scale=1" />
-  <title>Button</title>
-  <link rel="stylesheet" href="styles.css">
+  <title>Click to Launch</title>
+  <link rel="stylesheet" href="styles.css" />
   <style>
-    /* Keep a few essentials here so the button is styled even if CSS fails */
-    html, body {
-      height: 100%;
-      margin: 0;
-      background: #000;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      overflow: hidden;
-      font-family: system-ui, sans-serif;
-    }
-    #play-btn {
-      font-size: 1.1rem; font-weight: 700;
-      background: #fff; color: #000;
-      border: none; border-radius: 12px; padding: 14px 30px;
-      cursor: pointer; box-shadow: 0 8px 20px rgba(0,0,0,.4);
-      transition: all .3s ease; z-index: 10;
-    }
+    /* minimal safety styles in case styles.css fails to load */
+    html, body { height: 100%; margin: 0; background:#000; display:flex; align-items:center; justify-content:center; overflow:hidden; font-family:system-ui, sans-serif; }
+    #play-btn { font-size:1.1rem; font-weight:700; background:#fff; color:#000; border:0; border-radius:12px; padding:14px 30px; cursor:pointer; box-shadow:0 8px 20px rgba(0,0,0,.4); transition:transform .2s; z-index:10; }
     #play-btn:hover { transform: scale(1.05); }
   </style>
 </head>
 <body>
-  <button id="play-btn">Click Me</button>
-  
-  <!-- adds a Header -->
-  <h1 id="header" class="hidden">FUCK YOU</h1>
 
-  <!-- STAGE (hidden until click) -->
+  <!-- Click button -->
+  <button id="play-btn">Play sound</button>
+
+  <!-- Header (appears on click) -->
+  <h1 id="header" class="hidden">FUCK YOU!</h1>
+
+  <!-- Visual stage (hidden until click) -->
   <div id="stage" aria-hidden="true">
-    <!-- Center stack -->
     <!-- Center stack -->
     <div class="center">
       <img id="die" src="die.gif" alt="die" />
+      <!-- FULLY visible overlay (no opacity reduction) -->
       <img id="boom" src="Explosion.gif" alt="explosion overlay" />
     </div>
 
-    <!-- Two fast vertical sweeps using an explosion GIF -->
-    <!-- Replace explosion.gif with your preferred sweeping explosion sprite/gif -->
-    <!-- Two vertical sweeps using the SAME Explosion.gif -->
-    <div class="sweep s1" style="--x:14%"></div>
-    <div class="sweep s2" style="--x:72%"></div>
+    <!-- Two fast vertical sweeps using the SAME Explosion.gif -->
+    <div class="sweep s1" style="--x: 18%"></div>
+    <div class="sweep s2" style="--x: 78%"></div>
   </div>
 
-  <!-- Your background music -->
+  <!-- Audio (plays on user gesture) -->
   <audio id="bgm" src="track.mp3" loop preload="auto" playsinline></audio>
 
   <script>
     const playBtn = document.getElementById('play-btn');
     const stage   = document.getElementById('stage');
+    const header  = document.getElementById('header');
     const bgm     = document.getElementById('bgm');
-    const boom    = document.getElementById('boom');
 
     playBtn.addEventListener('click', async () => {
-      try {
-        // User gesture -> start audio + visuals
-        await bgm.play();
+      // start audio (user gesture)
+      try { await bgm.play(); } catch(e) { /* ignore if blocked */ }
 
-        // Reveal stage & start animations
-        stage.classList.add('active');
+      // reveal visuals
+      stage.classList.add('active');
 
-        // Kick the video (some mobile browsers require .play() after user gesture)
-        boom.currentTime = 0;
-        boom.play().catch(() => { /* ignore if blocked */ });
+      // fade-in header
+      header.classList.remove('hidden');
+      header.classList.add('show');
 
-        // Fade the button away and then remove it
-        playBtn.style.opacity = '0';
-        setTimeout(() => playBtn.remove(), 800);
-      } catch (err) {
-        console.error('Audio play blocked:', err);
-      }
-    });
-
-    // Optional: when the explosion finishes once, you can auto-replay or hide it.
-    boom.addEventListener('ended', () => {
-      // Uncomment one of these behaviors:
-      // boom.currentTime = 0; boom.play();                     // loop the overlay
-      // boom.classList.add('hide');                            // hide after one blast
+      // remove button (don’t just hide it)
+      playBtn.remove();
     });
   </script>
 </body>
