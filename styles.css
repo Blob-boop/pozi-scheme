@@ -80,6 +80,26 @@ html, body {
 .sweep.s1 { animation-delay: 0s; }
 .sweep.s2 { animation-delay: .15s; }
 
+.hidden {
+  opacity: 0;
+}
+
+#header {
+  position: fixed;
+  top: 10%;                /* or adjust to where you want it */
+  left: 50%;
+  transform: translateX(-50%);
+  color: #fff;
+  font-size: 3rem;
+  font-weight: 900;
+  letter-spacing: 2px;
+  text-shadow: 0 0 20px #ff5100, 0 0 40px #ff2200;
+  z-index: 20;
+  text-align: center;
+  opacity: 0;
+  transition: opacity 15s ease; /* 👈 makes it fade in over 3 seconds */
+}
+
 @keyframes fall {
   0%   { top: -40vh; transform: translateX(-50%) scale(1.05); }
   100% { top: 120vh; transform: translateX(-50%) scale(0.9); }
