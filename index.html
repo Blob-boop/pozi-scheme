@@ -3,87 +3,65 @@
 <head>
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width,initial-scale=1" />
-  <title>Fuck You</title>
+  <title>Sound Reveal</title>
   <style>
-    /* Full-bleed background image */
-    html, body { height: 100%; margin: 0; }
-    body {
-      background: #000 url("bg.png") center center / cover no-repeat fixed;
-      font-family: system-ui, -apple-system, Segoe UI, Roboto, Helvetica, Arial, sans-serif;
-      color: #fff;
-      overflow: hidden; /* optional: no scrollbars */
-    }
-    /* Big centered heading at the top */
-    .heading {
-      position: fixed;
-      top: 24px; left: 50%;
-      transform: translateX(-50%);
-      text-align: center;
-      font-weight: 900;
-      letter-spacing: 0.02em;
-      font-size: clamp(2rem, 5vw, 6rem);
+    html, body {
+      height: 100%;
       margin: 0;
-      text-shadow: 0 2px 16px rgba(0,0,0,.6);
-      pointer-events: none;
-      user-select: none;
-    }
-
-    /* Fallback play button if autoplay is blocked */
-    .gate {
-      position: fixed;
-      inset: 0;
-      display: none; /* shown only if needed */
+      background: #000;
+      display: flex;
       align-items: center;
       justify-content: center;
-      backdrop-filter: blur(2px);
+      overflow: hidden;
     }
-    .gate button {
-      font: 700 1.125rem/1 system-ui, sans-serif;
-      padding: 14px 18px;
+
+    #play-btn {
+      font: 700 1.25rem/1.4 system-ui, sans-serif;
+      background: #fff;
+      color: #000;
+      border: none;
       border-radius: 12px;
-      border: 0;
+      padding: 16px 32px;
       cursor: pointer;
-      box-shadow: 0 8px 24px rgba(0,0,0,.35);
+      box-shadow: 0 8px 20px rgba(0,0,0,.4);
+      transition: transform 0.2s ease;
+    }
+
+    #play-btn:hover {
+      transform: scale(1.05);
+    }
+
+    #bg {
+      position: fixed;
+      inset: 0;
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+      opacity: 0;
+      transition: opacity 1.5s ease;
+      z-index: -1;
     }
   </style>
 </head>
 <body>
-  <h1 class="heading">FUCK YOU!</h1>
-
-  <!-- Audio element -->
-  <audio id="bgm" src="track.mp3" preload="auto" loop playsinline></audio>
-
-  <!-- Overlay shown only if autoplay is blocked -->
-  <div id="gate" class="gate" aria-hidden="true">
-    <button id="play">Play sound</button>
-  </div>
+  <button id="play-btn">Play sound</button>
+  <img id="bg" src="bg.jpg" alt="Background">
+  <audio id="bgm" src="track.mp3" loop preload="auto" playsinline></audio>
 
   <script>
-    (async () => {
-      const audio = document.getElementById('bgm');
-      const gate  = document.getElementById('gate');
-      const playBtn = document.getElementById('play');
+    const playBtn = document.getElementById('play-btn');
+    const bg = document.getElementById('bg');
+    const bgm = document.getElementById('bgm');
 
-      // Try to autoplay immediately
+    playBtn.addEventListener('click', async () => {
       try {
-        await audio.play(); // most desktop browsers may still block this
-      } catch (err) {
-        // Show “Play sound” button as fallback
-        gate.style.display = 'flex';
-        gate.setAttribute('aria-hidden', 'false');
+        await bgm.play();
+        bg.style.opacity = 1;
+        playBtn.remove();
+      } catch (e) {
+        console.error('Audio play blocked:', e);
       }
-
-      // On user gesture, start audio and hide overlay
-      playBtn?.addEventListener('click', async () => {
-        try {
-          await audio.play();
-          gate.style.display = 'none';
-          gate.setAttribute('aria-hidden', 'true');
-        } catch (e) {
-          console.error(e);
-        }
-      });
-    })();
+    });
   </script>
 </body>
 </html>
