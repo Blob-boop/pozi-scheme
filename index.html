@@ -6,9 +6,9 @@
   <title>Click to Launch</title>
   <link rel="stylesheet" href="styles.css" />
   <style>
-    /* minimal safety styles in case styles.css fails to load */
+    /* tiny safety styling so the button is visible even if CSS fails */
     html, body { height: 100%; margin: 0; background:#000; display:flex; align-items:center; justify-content:center; overflow:hidden; font-family:system-ui, sans-serif; }
-    #play-btn { font-size:1.1rem; font-weight:700; background:#fff; color:#000; border:0; border-radius:12px; padding:14px 30px; cursor:pointer; box-shadow:0 8px 20px rgba(0,0,0,.4); transition:transform .2s; z-index:10; }
+    #play-btn { font-size:1.1rem; font-weight:700; background:#fff; color:#000; border:0; border-radius:12px; padding:14px 30px; cursor:pointer; box-shadow:0 8px 20px rgba(0,0,0,.4); transition:transform .2s; z-index:100; }
     #play-btn:hover { transform: scale(1.05); }
   </style>
 </head>
@@ -17,21 +17,19 @@
   <!-- Click button -->
   <button id="play-btn">Play sound</button>
 
-  <!-- Header (appears on click) -->
-  <h1 id="header" class="hidden">FUCK YOU!</h1>
+  <!-- Header (hidden offscreen; slides in over 5s on click) -->
+  <h1 id="header">HIIIII!</h1>
 
   <!-- Visual stage (hidden until click) -->
   <div id="stage" aria-hidden="true">
-    <!-- Center stack -->
+    <!-- Center stack (NO explosion overlay here) -->
     <div class="center">
       <img id="die" src="die.gif" alt="die" />
-      <!-- FULLY visible overlay (no opacity reduction) -->
-      <img id="boom" src="Explosion.gif" alt="explosion overlay" />
     </div>
 
-    <!-- Two fast vertical sweeps using the SAME Explosion.gif -->
+    <!-- Two fast vertical sweeps using Explosion.gif -->
     <div class="sweep s1" style="--x: 18%"></div>
-    <div class="sweep s2" style="--x: 78%"></div>
+    <div class="sweep s2" style="--x: 82%"></div>
   </div>
 
   <!-- Audio (plays on user gesture) -->
@@ -44,17 +42,15 @@
     const bgm     = document.getElementById('bgm');
 
     playBtn.addEventListener('click', async () => {
-      // start audio (user gesture)
-      try { await bgm.play(); } catch(e) { /* ignore if blocked */ }
+      try { await bgm.play(); } catch(e) {}
 
-      // reveal visuals
+      // show visuals
       stage.classList.add('active');
 
-      // fade-in header
-      header.classList.remove('hidden');
+      // slide-in header over 5s
       header.classList.add('show');
 
-      // remove button (don’t just hide it)
+      // remove button entirely
       playBtn.remove();
     });
   </script>
