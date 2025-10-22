@@ -50,9 +50,14 @@ html, body {
   transform: translate(-50%, -50%);
   width: 95%;
   height: auto;
-  /* If your MP4 has a dark/black background, this helps “key it out” */
+
+  /* keep this if the video has a black background you want to “key out” */
   mix-blend-mode: screen;
-  filter: brightness(1.35) contrast(1.1);
+
+  /* LOWER the opacity a lot */
+  opacity: 0.15;         /* ← try 0.10–0.25 to taste */
+
+  filter: brightness(1.1) contrast(1.05);
   z-index: 2;
   pointer-events: none;
 }
