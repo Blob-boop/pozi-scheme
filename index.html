@@ -4,43 +4,43 @@
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width,initial-scale=1" />
   <title>Click to Launch</title>
-  <link rel="stylesheet" href="styles.css" />
+  <link rel="stylesheet" href="styles.css?v=4" />
   <style>
-    /* tiny safety so button shows even if CSS fails */
+    /* tiny safety so the button shows even if CSS fails */
     html, body { height: 100%; margin: 0; background:#000; display:flex; align-items:center; justify-content:center; overflow:hidden; font-family:system-ui, sans-serif; }
-    #play-btn { font-size:1.1rem; font-weight:700; background:#fff; color:#000; border:0; border-radius:12px; padding:14px 30px; cursor:pointer; box-shadow:0 8px 20px rgba(0,0,0,.4); transition:transform .2s; z-index:100; }
+    #play-btn { font-size:1.1rem; font-weight:700; background:#fff; color:#000; border:0; border-radius:12px; padding:14px 30px; cursor:pointer; box-shadow:0 8px 20px rgba(0,0,0,.4); transition:transform .2s; z-index:1000; }
     #play-btn:hover { transform: scale(1.05); }
   </style>
 </head>
 <body>
 
   <!-- Click button -->
-  <button id="play-btn">Click Me</button>
+  <button id="play-btn">Play sound</button>
 
   <!-- Header (slides in over 5s on click) -->
   <h1 id="header">FUCK YOU!</h1>
 
-  <!-- Visual stage (hidden until click) -->
+  <!-- Visual stage (revealed on click) -->
   <div id="stage" aria-hidden="true">
-    <!-- Center (ONLY die.gif) -->
+    <!-- Center (die.gif fades in AFTER header finishes) -->
     <div class="center">
-      <img id="die" src="die.gif" alt="die" />
+      <img id="die" src="die.gif?v=4" alt="die" />
     </div>
 
     <!-- Vertical marquee explosions (same Explosion.gif) -->
     <div class="vmarq left"  style="--speed:0.9s; --size:26vmin;">
       <div class="track">
-        <img src="Explosion.gif" alt="">
-        <img src="Explosion.gif" alt="">
-        <img src="Explosion.gif" alt="">
+        <img src="Explosion.gif?v=4" alt="">
+        <img src="Explosion.gif?v=4" alt="">
+        <img src="Explosion.gif?v=4" alt="">
       </div>
     </div>
 
     <div class="vmarq right reverse" style="--speed:0.9s; --size:26vmin;">
       <div class="track">
-        <img src="Explosion.gif" alt="">
-        <img src="Explosion.gif" alt="">
-        <img src="Explosion.gif" alt="">
+        <img src="Explosion.gif?v=4" alt="">
+        <img src="Explosion.gif?v=4" alt="">
+        <img src="Explosion.gif?v=4" alt="">
       </div>
     </div>
   </div>
@@ -53,13 +53,19 @@
     const stage   = document.getElementById('stage');
     const header  = document.getElementById('header');
     const bgm     = document.getElementById('bgm');
+    const dieImg  = document.getElementById('die');
 
     playBtn.addEventListener('click', async () => {
       try { await bgm.play(); } catch(e) {}
 
-      // show visuals & animate header
+      // reveal stage and animate header
       stage.classList.add('active');
       header.classList.add('show');
+
+      // when header finishes sliding, reveal die.gif with a slow fade
+      header.addEventListener('animationend', () => {
+        dieImg.classList.add('reveal');
+      }, { once: true });
 
       // remove button entirely
       playBtn.remove();
