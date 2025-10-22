@@ -4,7 +4,9 @@
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width,initial-scale=1" />
   <title>Play Sound</title>
+  <link rel="stylesheet" href="styles.css">
   <style>
+    /* Keep a few essentials here so the button is styled even if CSS fails */
     html, body {
       height: 100%;
       margin: 0;
@@ -15,56 +17,69 @@
       overflow: hidden;
       font-family: system-ui, sans-serif;
     }
-
     #play-btn {
-      font-size: 1.25rem;
-      font-weight: 700;
-      background: #fff;
-      color: #000;
-      border: none;
-      border-radius: 12px;
-      padding: 16px 36px;
-      cursor: pointer;
-      box-shadow: 0 8px 20px rgba(0,0,0,.4);
-      transition: all 0.3s ease;
-      z-index: 10;
+      font-size: 1.1rem; font-weight: 700;
+      background: #fff; color: #000;
+      border: none; border-radius: 12px; padding: 14px 30px;
+      cursor: pointer; box-shadow: 0 8px 20px rgba(0,0,0,.4);
+      transition: all .3s ease; z-index: 10;
     }
-
-    #play-btn:hover {
-      transform: scale(1.05);
-    }
-
-    #bg {
-      position: fixed;
-      inset: 0;
-      width: 100%;
-      height: 100%;
-      object-fit: cover;
-      opacity: 0;
-      transition: opacity 1.5s ease;
-      z-index: 0;
-    }
+    #play-btn:hover { transform: scale(1.05); }
   </style>
 </head>
 <body>
   <button id="play-btn">Play sound</button>
-  <img id="bg" src="bg.jpg" alt="Background image">
+
+  <!-- STAGE (hidden until click) -->
+  <div id="stage" aria-hidden="true">
+    <!-- Center stack -->
+    <div class="center">
+      <img id="die" src="die.gif" alt="die" />
+      <!-- MP4 explosion overlaid above die.gif.
+           If your video has black background, mix-blend:screen makes it “glow”. -->
+      <video id="boom" src="explosion.mp4" preload="auto" playsinline></video>
+    </div>
+
+    <!-- Two fast vertical sweeps using an explosion GIF -->
+    <!-- Replace explosion.gif with your preferred sweeping explosion sprite/gif -->
+    <div class="sweep s1" style="--x:14%"></div>
+    <div class="sweep s2" style="--x:72%"></div>
+  </div>
+
+  <!-- Your background music -->
   <audio id="bgm" src="track.mp3" loop preload="auto" playsinline></audio>
 
   <script>
     const playBtn = document.getElementById('play-btn');
-    const bg = document.getElementById('bg');
-    const bgm = document.getElementById('bgm');
+    const stage   = document.getElementById('stage');
+    const bgm     = document.getElementById('bgm');
+    const boom    = document.getElementById('boom');
 
     playBtn.addEventListener('click', async () => {
       try {
+        // User gesture -> start audio + visuals
         await bgm.play();
-        bg.style.opacity = 1;                // fade the image in
-        playBtn.style.opacity = 0;           // fade the button out
-        setTimeout(() => playBtn.remove(), 800);  // remove it after fade
+
+        // Reveal stage & start animations
+        stage.classList.add('active');
+
+        // Kick the video (some mobile browsers require .play() after user gesture)
+        boom.currentTime = 0;
+        boom.play().catch(() => { /* ignore if blocked */ });
+
+        // Fade the button away and then remove it
+        playBtn.style.opacity = '0';
+        setTimeout(() => playBtn.remove(), 800);
       } catch (err) {
         console.error('Audio play blocked:', err);
       }
+    });
+
+    // Optional: when the explosion finishes once, you can auto-replay or hide it.
+    boom.addEventListener('ended', () => {
+      // Uncomment one of these behaviors:
+      // boom.currentTime = 0; boom.play();                     // loop the overlay
+      // boom.classList.add('hide');                            // hide after one blast
     });
   </script>
 </body>
