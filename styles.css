@@ -16,14 +16,14 @@ html, body {
   position: fixed;
   top: 0;
   left: 50%;
-  transform: translate(-50%, -120%);  /* start above viewport */
+  transform: translate(-50%, -120%);     /* start above viewport */
   color: #fff;
   font-size: clamp(2.5rem, 8vw, 5rem);
   font-weight: 1000;
   letter-spacing: 2px;
   text-align: center;
   text-shadow: 0 0 20px #ff6a00, 0 0 40px #ff2a00;
-  z-index: 50;
+  z-index: 900;                           /* very high so it's visible */
   opacity: 0;
 }
 #header.show {
@@ -43,14 +43,16 @@ html, body {
   pointer-events: none;
   opacity: 0;
   transition: opacity .6s ease;
+  z-index: 100;                           /* higher than background */
 }
 #stage.active { opacity: 1; }
 
-/* Center: only die.gif */
+/* Center: die.gif fades in AFTER header animation ends */
 .center {
   position: relative;
   width: min(60vmin, 85vw);
   aspect-ratio: 1 / 1;
+  z-index: 200;                           /* above columns */
 }
 #die {
   position: absolute;
@@ -58,12 +60,14 @@ html, body {
   transform: translate(-50%, -50%);
   width: 70%;
   height: auto;
-  z-index: 10; /* above columns */
+  opacity: 0;                             /* start hidden */
+  transition: opacity 3s ease;            /* slow fade */
 }
+#die.reveal { opacity: 1; }
 
 /* Vertical marquee columns (modern <marquee>) */
 .vmarq {
-  --size: 26vmin;     /* width of the column */
+  --size: 26vmin;     /* column width */
   --speed: 0.9s;      /* smaller = faster */
   position: fixed;
   top: 0;
@@ -71,7 +75,7 @@ html, body {
   width: var(--size);
   overflow: hidden;
   pointer-events: none;
-  z-index: 8;         /* visible, but below die and header */
+  z-index: 150;                           /* ensure visible under die/header */
 }
 .vmarq.left  { left: 2%; }
 .vmarq.right { right: 2%; }
